@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Parsed xml file of aviasales and saved database">
+    <meta name="author" content="Mohammedyusuf (Joseph) Rahkimov - joseph.uz">
+    <title>Aviasales assignment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+    <meta name="theme-color" content="#563d7c">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        .ticket-card {
+            padding: 20px;
+            margin: 10px 0px;
+            background-color: floralwhite;
+            border: #444 dashed 1px;
+            border-radius: 35px;
+        }
+
+
+    </style>
+</head>
+<body>
+<main>
+    <div class="container py-4">
+
+        <div class="p-5 mb-4 bg-light rounded-3">
+            <div class="container-fluid py-5">
+                <h1 class="display-5 fw-bold">Aviasales assignment</h1>
+
+            </div>
+        </div>
+        <div class="pagination">
+            <span class="step-links">
+                
+                    <a href="?page=1">1</a>
+                    <a href="?page=2">2</a>
+                    <a href="?page=3">3</a>
+                    <a href="?page=4">4</a>
+                    <a href="?page=5">5</a>
+                    <a href="?page=6">6</a>
+                    <a href="?page=7">7</a>
+                    <a href="?page=8">8</a>
+                    <a href="?page=9">9</a>
+
+            </span>
+        </div>
+
+
+        <div class="row align-items-md-stretch">
+            <div class="col-md-6">
+                <h3 class="my-3">Old request</h3>
+
+                {% for object in object_list %}
+                    {% if object.request_number == 1 %}
+                        <div class="p-5 mb-3 bg-light border rounded-3">
+                            <h2>
+                                <span id="onward{{ object.id }}"></span>
+                                to <span id="return{{ object.id }}"></span>
+                            </h2>
+                            {% for ticket in object.flights.all %}
+                                {% if ticket.onward_ticket %}
+                                    <div class="card p-3 mb-3 {% if ticket != object.flights.first %} d-none {% endif %}">
+                                        <div class="fs-6">
+                                            <b>Destination onward</b><br>
+                                            <span id="onwards{{ object.id }}"></span>
+                                        </div>
+                                        {% if ticket == object.flights.first %}
+                                            <script>
+                                                document.getElementById("onward{{ object.id }}").innerText = "{{ ticket.source }}"
+                                                document.getElementById("onwards{{ object.id }}").innerText = "{{ ticket.source }} - {{ ticket.destination }}🔹"
+                                            </script>
+                                        {% else %}
+
+                                            <script>
+                                                document.getElementById("onwards{{ object.id }}").innerText = document.getElementById("onwards{{ object.id }}").innerText + "{{ ticket.source }} - {{ ticket.destination }}"
+                                            </script>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+
+                                {% if ticket.onward_ticket %}
+                                    <div class="ticket-card">
+                                        <i class="fa fa-plane"></i>
+                                        <b>{{ ticket.source }}
+                                            - {{ ticket.destination }}</b>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <ul style="list-style: none; padding: 0px;">
+                                                    <li class="fs-5 mb-2">
+                                                        Flight #{{ ticket.flight_number }}
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="fa fa-map-marker"></i>
+                                                        <b>Destination</b>
+                                                        <span class="text-secondary">{{ ticket.source }} to {{ ticket.destination }}</span>
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="fa fa-clock-o"></i>
+                                                        <b>Departure</b>
+                                                        <span class="text-secondary">{{ ticket.departure_time_stamp }} </span>
+                                                    </li>
+                                                    <li>
+                                                        <i class="fa fa-clock-o"></i>
+                                                        <b>Arrival</b>
+                                                        <span class="text-secondary">{{ ticket.arrival_time_stamp }} </span>
+                                                    </li>
+
+
+                                                </ul>
+
+                                            </div>
+                                            <div class="col-md-6">
+                                                <ul style="list-style: none; padding: 0px;">
+                                                    <li class="fs-5 mb-2">
+                                                        .
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="fa fa-glass"></i>
+                                                        <b>Flight class</b>
+                                                        <span class="text-secondary">{{ ticket.flight_class }}</span>
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="fa fa-caret-square-o-down"></i>
+                                                        <b> Stops</b>
+                                                        <span class="text-secondary">{{ ticket.number_of_stops }} </span>
+                                                    </li>
+                                                    <li>
+                                                        <i class="fa fa-ticket"></i>
+                                                        <b>Ticket type </b>
+                                                        <span class="text-secondary">{{ ticket.ticket_type }} </span>
+                                                    </li>
+
+
+                                                </ul>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                {% endif %}
+
+                                {% if ticket.return_ticket %}
+                                    <div class="card p-3 mb-3 mt-4 {% if ticket == object.flights.last %} d-none {% endif %}">
+                                        <div class="fs-6">
+                                            <b>Destination return ⬅️</b><br>
+                                            <span id="returns{{ object.id }}">
+                                            </span>
+                                        </div>
+                                        {% if ticket != object.flights.last %}
+                                            <script>
+                                                document.getElementById("returns{{ object.id }}").innerHTML = "{{ ticket.source }} - {{ ticket.destination }}🔹"
+                                            </script>
+                                        {% else %}
+                                            <script>
+                                                document.getElementById("returns{{ object.id }}").innerText = document.getElementById("returns{{ object.id }}").innerText + "{{ ticket.source }} - {{ ticket.destination }}"
+                                            </script>
+
+                                        {% endif %}
+
+                                        {% if ticket != object.flights.last %}
+                                            <script>
+                                                document.getElementById("return{{ object.id }}").innerText = "{{ ticket.source }}"
+                                            </script>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+
+                                {% if ticket.return_ticket %}
+                                    <div class="ticket-card">
+                                        <i class="fa fa-plane"></i>
+                                        <b>{{ ticket.source }}
+                                            - {{ ticket.destination }}</b>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <ul style="list-style: none; padding: 0px;">
+                                                    <li class="fs-5 mb-2">
+                                                        Flight #{{ ticket.flight_number }}
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="fa fa-map-marker"></i>
+                                                        <b>Destination</b>
+                                                        <span class="text-secondary">{{ ticket.source }} to {{ ticket.destination }}</span>
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="fa fa-clock-o"></i>
+                                                        <b>Departure</b>
+                                                        <span class="text-secondary">{{ ticket.departure_time_stamp }} </span>
+                                                    </li>
+                                                    <li>
+                                                        <i class="fa fa-clock-o"></i>
+                                                        <b>Arrival</b>
+                                                        <span class="text-secondary">{{ ticket.arrival_time_stamp }} </span>
+                                                    </li>
+
+
+                                                </ul>
+
+                                            </div>
+                                            <div class="col-md-6">
+                                                <ul style="list-style: none; padding: 0px;">
+                                                    <li class="fs-5 mb-2">
+                                                        .
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="fa fa-glass"></i>
+                                                        <b>Flight class</b>
+                                                        <span class="text-secondary">{{ ticket.flight_class }}</span>
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="fa fa-caret-square-o-down"></i>
+                                                        <b> Stops</b>
+                                                        <span class="text-secondary">{{ ticket.number_of_stops }} </span>
+                                                    </li>
+                                                    <li>
+                                                        <i class="fa fa-ticket"></i>
+                                                        <b>Ticket type </b>
+                                                        <span class="text-secondary">{{ ticket.ticket_type }} </span>
+                                                    </li>
+
+
+                                                </ul>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                {% endif %}
+
+                            {% endfor %}
+
+                            {#                            <ul style="list-style: none">#}
+                            {##}
+                            {##}
+                            {#                                <li> #}
+                            {#                                    {% for ticket in object.flights.all %}#}
+                            {##}
+                            {#                                        {% if ticket.return_ticket %}#}
+                            {##}
+                            {#                                            {{ ticket.source }} - {{ ticket.destination }}️#}
+                            {#                                            {% if ticket != object.flights.last %}#}
+                            {#                                                🔹#}
+                            {#                                                <script>#}
+                            {#                                                    document.getElementById("return{{ object.id }}").innerText = "{{ ticket.source }}"#}
+                            {#                                                </script>#}
+                            {#                                            {% endif %}#}
+                            {#                                        {% endif %}#}
+                            {##}
+                            {#                                    {% endfor %}#}
+                            {#                                </li>#}
+                            {#                            </ul>#}
+                            {##}
+                            {#                            <ul>#}
+                            {#                                <li>Flight number #{{ object.flight_number }}</li>#}
+                            {#                            </ul>#}
+
+
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="col-md-6">
+                <h3 class="my-3">New request</h3>
+
+                {% for object in object_list %}
+                    {% if object.request_number == 2 %}
+                        <div class="p-5 mb-3 bg-light border rounded-3">
+                            <h2>
+                                <span id="onward{{ object.id }}nd"></span>
+                                to <span id="return{{ object.id }}nd"></span>
+                            </h2>
+                            {% for ticket in object.flights.all %}
+                                {% if ticket.onward_ticket %}
+                                    <div class="card p-3 mb-3 {% if ticket != object.flights.first %} d-none {% endif %}">
+                                        <div class="fs-6">
+                                            <b>Destination onward</b><br>
+                                            <span id="onwards{{ object.id }}nd"></span>
+                                        </div>
+                                        {% if ticket == object.flights.first %}
+                                            <script>
+                                                document.getElementById("onward{{ object.id }}nd").innerText = "{{ ticket.source }}"
+                                                document.getElementById("onwards{{ object.id }}nd").innerText = "{{ ticket.source }} - {{ ticket.destination }}🔹"
+                                            </script>
+                                        {% else %}
+
+                                            <script>
+                                                document.getElementById("onwards{{ object.id }}nd").innerText = document.getElementById("onwards{{ object.id }}nd").innerText + "{{ ticket.source }} - {{ ticket.destination }}"
+                                            </script>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+
+                                {% if ticket.onward_ticket %}
+                                    <div class="ticket-card">
+                                        <i class="fa fa-plane"></i>
+                                        <b>{{ ticket.source }}
+                                            - {{ ticket.destination }}</b>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <ul style="list-style: none; padding: 0px;">
+                                                    <li class="fs-5 mb-2">
+                                                        Flight #{{ ticket.flight_number }}
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="fa fa-map-marker"></i>
+                                                        <b>Destination</b>
+                                                        <span class="text-secondary">{{ ticket.source }} to {{ ticket.destination }}</span>
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="fa fa-clock-o"></i>
+                                                        <b>Departure</b>
+                                                        <span class="text-secondary">{{ ticket.departure_time_stamp }} </span>
+                                                    </li>
+                                                    <li>
+                                                        <i class="fa fa-clock-o"></i>
+                                                        <b>Arrival</b>
+                                                        <span class="text-secondary">{{ ticket.arrival_time_stamp }} </span>
+                                                    </li>
+
+
+                                                </ul>
+
+                                            </div>
+                                            <div class="col-md-6">
+                                                <ul style="list-style: none; padding: 0px;">
+                                                    <li class="fs-5 mb-2">
+                                                        .
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="fa fa-glass"></i>
+                                                        <b>Flight class</b>
+                                                        <span class="text-secondary">{{ ticket.flight_class }}</span>
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="fa fa-caret-square-o-down"></i>
+                                                        <b> Stops</b>
+                                                        <span class="text-secondary">{{ ticket.number_of_stops }} </span>
+                                                    </li>
+                                                    <li>
+                                                        <i class="fa fa-ticket"></i>
+                                                        <b>Ticket type </b>
+                                                        <span class="text-secondary">{{ ticket.ticket_type }} </span>
+                                                    </li>
+
+
+                                                </ul>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                {% endif %}
+
+                                {% if ticket.return_ticket %}
+                                    <div class="card p-3 mb-3 mt-4 {% if ticket == object.flights.last %} d-none {% endif %}">
+                                        <div class="fs-6">
+                                            <b>Destination return ⬅️</b><br>
+                                            <span id="returns{{ object.id }}nd">
+                                            </span>
+                                        </div>
+                                        {% if ticket != object.flights.last %}
+                                            <script>
+                                                document.getElementById("returns{{ object.id }}nd").innerHTML = "{{ ticket.source }} - {{ ticket.destination }}🔹"
+                                            </script>
+                                        {% else %}
+                                            <script>
+                                                document.getElementById("returns{{ object.id }}nd").innerText = document.getElementById("returns{{ object.id }}nd").innerText + "{{ ticket.source }} - {{ ticket.destination }}"
+                                            </script>
+
+                                        {% endif %}
+
+                                        {% if ticket != object.flights.last %}
+                                            <script>
+                                                document.getElementById("return{{ object.id }}nd").innerText = "{{ ticket.source }}"
+                                            </script>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+
+                                {% if ticket.return_ticket %}
+                                    <div class="ticket-card">
+                                        <i class="fa fa-plane"></i>
+                                        <b>{{ ticket.source }}
+                                            - {{ ticket.destination }}</b>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <ul style="list-style: none; padding: 0px;">
+                                                    <li class="fs-5 mb-2">
+                                                        Flight #{{ ticket.flight_number }}
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="fa fa-map-marker"></i>
+                                                        <b>Destination</b>
+                                                        <span class="text-secondary">{{ ticket.source }} to {{ ticket.destination }}</span>
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="fa fa-clock-o"></i>
+                                                        <b>Departure</b>
+                                                        <span class="text-secondary">{{ ticket.departure_time_stamp }} </span>
+                                                    </li>
+                                                    <li>
+                                                        <i class="fa fa-clock-o"></i>
+                                                        <b>Arrival</b>
+                                                        <span class="text-secondary">{{ ticket.arrival_time_stamp }} </span>
+                                                    </li>
+
+
+                                                </ul>
+
+                                            </div>
+                                            <div class="col-md-6">
+                                                <ul style="list-style: none; padding: 0px;">
+                                                    <li class="fs-5 mb-2">
+                                                        .
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="fa fa-glass"></i>
+                                                        <b>Flight class</b>
+                                                        <span class="text-secondary">{{ ticket.flight_class }}</span>
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="fa fa-caret-square-o-down"></i>
+                                                        <b> Stops</b>
+                                                        <span class="text-secondary">{{ ticket.number_of_stops }} </span>
+                                                    </li>
+                                                    <li>
+                                                        <i class="fa fa-ticket"></i>
+                                                        <b>Ticket type </b>
+                                                        <span class="text-secondary">{{ ticket.ticket_type }} </span>
+                                                    </li>
+
+
+                                                </ul>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                {% endif %}
+
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
