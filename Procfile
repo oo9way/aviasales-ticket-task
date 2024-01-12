@@ -1,1 +1,1 @@
-web: gunicorn imagegenerator.wsgi  --bind 0.0.0.0:$PORT
+web: gunicorn aviaticket.wsgi  --bind 0.0.0.0:$PORT
