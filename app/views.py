@@ -23,6 +23,4 @@ class AviaSalesHome(ListView):
             if i < len(new_tickets):
                 combined_tickets.append(new_tickets[i])
 
-        print(len(combined_tickets))
-
         return combined_tickets

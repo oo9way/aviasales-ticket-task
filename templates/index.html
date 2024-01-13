@@ -68,7 +68,7 @@
 
         <div class="row align-items-md-stretch">
             <div class="col-md-6">
-                <h3 class="my-3">Old request</h3>
+                <h3 class="my-3">Request 1</h3>
 
                 {% for object in object_list %}
                     {% if object.request_number == 1 %}
@@ -257,47 +257,20 @@
                                 {% endif %}
 
                             {% endfor %}
-
-                            {#                            <ul style="list-style: none">#}
-                            {##}
-                            {##}
-                            {#                                <li> #}
-                            {#                                    {% for ticket in object.flights.all %}#}
-                            {##}
-                            {#                                        {% if ticket.return_ticket %}#}
-                            {##}
-                            {#                                            {{ ticket.source }} - {{ ticket.destination }}️#}
-                            {#                                            {% if ticket != object.flights.last %}#}
-                            {#                                                🔹#}
-                            {#                                                <script>#}
-                            {#                                                    document.getElementById("return{{ object.id }}").innerText = "{{ ticket.source }}"#}
-                            {#                                                </script>#}
-                            {#                                            {% endif %}#}
-                            {#                                        {% endif %}#}
-                            {##}
-                            {#                                    {% endfor %}#}
-                            {#                                </li>#}
-                            {#                            </ul>#}
-                            {##}
-                            {#                            <ul>#}
-                            {#                                <li>Flight number #{{ object.flight_number }}</li>#}
-                            {#                            </ul>#}
-
-
                         </div>
                     {% endif %}
                 {% endfor %}
             </div>
 
             <div class="col-md-6">
-                <h3 class="my-3">New request</h3>
+                <h3 class="my-3">Request 2</h3>
 
                 {% for object in object_list %}
                     {% if object.request_number == 2 %}
                         <div class="p-5 mb-3 bg-light border rounded-3">
                             <h2>
                                 <span id="onward{{ object.id }}nd"></span>
-                                to <span id="return{{ object.id }}nd"></span>
+                                to <span id="return{{ object.id }}nd">{{ object.flights.last.destination }}</span>
                             </h2>
                             {% for ticket in object.flights.all %}
                                 {% if ticket.onward_ticket %}
